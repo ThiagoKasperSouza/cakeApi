@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routes import auth, budgets, categories, products, team_members, users
+from api.routes import auth, budgets, categories, metrics, products, team_members, users
 from core.config import settings
 from database.connection import init_db
 
@@ -35,3 +35,4 @@ app.include_router(categories.router)
 app.include_router(products.router)
 app.include_router(budgets.router)
 app.include_router(team_members.router)
+app.include_router(metrics.router)
