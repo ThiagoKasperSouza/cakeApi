@@ -49,10 +49,10 @@ def client():
 def test_cors_allows_local_frontend_origin(client):
     response = client.get(
         "/products",
-        headers={"Origin": "http://localhost:3000"},
+        headers={"Origin": "http://localhost:4200"},
     )
     assert response.status_code == 200
-    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
+    assert response.headers["access-control-allow-origin"] == "http://localhost:4200"
 
     preflight = client.options(
         "/products",
@@ -63,7 +63,7 @@ def test_cors_allows_local_frontend_origin(client):
         },
     )
     assert preflight.status_code == 200
-    assert preflight.headers["access-control-allow-origin"] == "http://localhost:3000"
+    assert preflight.headers["access-control-allow-origin"] == "http://localhost:4200"
     assert "GET" in preflight.headers["access-control-allow-methods"]
 
 
