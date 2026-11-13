@@ -94,7 +94,7 @@ Isso sobe dois serviços:
 
 A API cria as tabelas e executa `insert_into_db.sql` automaticamente no startup (`init_db()` com retries). O seed cadastra as categorias `cakes`, `cupcakes`, `cookies` e `coffee`, além dos produtos de exemplo, e pode ser repetido sem duplicar esses registros. A opção `all` (`Tudo`) é virtual e não é salva como categoria; no filtro de produtos, `category_id=all` retorna todos.
 
-> A alteração para IDs de categoria string é aplicada automaticamente em bancos novos. Um volume que já tenha sido criado com o esquema antigo (IDs inteiros) precisa de migração antes de iniciar a nova versão.
+> Em volumes existentes, a API migra automaticamente os IDs numéricos de categoria para strings antes de executar o seed, preservando produtos e categorias. Categorias conhecidas são convertidas para `cakes`, `cupcakes`, `cookies` ou `coffee`; outras recebem IDs `legacy-<id>`.
 
 - API: <http://127.0.0.1:8000>
 - Swagger UI: <http://127.0.0.1:8000/docs>
