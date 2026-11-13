@@ -9,7 +9,7 @@ class CategoryBase(BaseModel):
 
 
 class CategoryCreate(CategoryBase):
-    pass
+    id: str = Field(min_length=1, max_length=32, pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
 class CategoryUpdate(BaseModel):
@@ -20,7 +20,7 @@ class CategoryUpdate(BaseModel):
 class CategoryRead(CategoryBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: str
 
 
 class CategoryWithProducts(CategoryRead):

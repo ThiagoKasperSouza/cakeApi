@@ -92,7 +92,9 @@ Isso sobe dois serviços:
 | `db`    | `postgres:16-alpine` | `5433` → `5432` | PostgreSQL com volume `postgres_data` e healthcheck `pg_isready` |
 | `api`   | build local (`Dockerfile`) | `8000` → `8000` | FastAPI/Uvicorn; sobe após o `db` ficar saudável |
 
-A API cria as tabelas automaticamente no startup (`init_db()` com retries).
+A API cria as tabelas e executa `insert_into_db.sql` automaticamente no startup (`init_db()` com retries). O seed cadastra as categorias `cakes`, `cupcakes`, `cookies` e `coffee`, além dos produtos de exemplo, e pode ser repetido sem duplicar esses registros. A opção `all` (`Tudo`) é virtual e não é salva como categoria; no filtro de produtos, `category_id=all` retorna todos.
+
+> A alteração para IDs de categoria string é aplicada automaticamente em bancos novos. Um volume que já tenha sido criado com o esquema antigo (IDs inteiros) precisa de migração antes de iniciar a nova versão.
 
 - API: <http://127.0.0.1:8000>
 - Swagger UI: <http://127.0.0.1:8000/docs>
@@ -166,18 +168,18 @@ Base URL: `http://127.0.0.1:8000`
 ### Exemplo de uso
 
 ```bash
-# criar categoria
+# criar categoria (IDs são strings)
 curl -X POST http://127.0.0.1:8000/categories \
   -H 'Content-Type: application/json' \
-  -d '{"label": "Bolos", "icon": "cake"}'
+  -d '{"id": "custom-cakes", "label": "Bolos especiais", "icon": "cake"}'
 
-# criar produto na categoria 1
+# criar produto na categoria cakes
 curl -X POST http://127.0.0.1:8000/products \
   -H 'Content-Type: application/json' \
-  -d '{"name": "Bolo de Cenoura", "price": 42.0, "category_id": 1, "stock": 8}'
+  -d '{"name": "Bolo de Cenoura", "price": 42.0, "category_id": "cakes", "stock": 8}'
 
 # categoria com produtos
-curl http://127.0.0.1:8000/categories/1/products
+curl http://127.0.0.1:8000/categories/cakes/products
 
 # criar usuário e autenticar
 curl -X POST http://127.0.0.1:8000/users \

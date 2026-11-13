@@ -15,7 +15,7 @@ class ProductService:
         self,
         skip: int = 0,
         limit: int = 100,
-        category_id: int | None = None,
+        category_id: str | None = None,
     ) -> list[Product]:
         return self.repository.list(skip=skip, limit=limit, category_id=category_id)
 

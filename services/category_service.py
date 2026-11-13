@@ -14,10 +14,10 @@ class CategoryService:
     def list_categories(self, skip: int = 0, limit: int = 100) -> list[Category]:
         return self.repository.list(skip=skip, limit=limit)
 
-    def get_category(self, category_id: int) -> Category | None:
+    def get_category(self, category_id: str) -> Category | None:
         return self.repository.get(category_id)
 
-    def get_category_with_products(self, category_id: int) -> Category | None:
+    def get_category_with_products(self, category_id: str) -> Category | None:
         return self.repository.get_with_products(category_id)
 
     def create_category(self, data: CategoryCreate) -> Category:

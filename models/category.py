@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Category(Base):
     __tablename__ = "categories"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, index=True)
     label: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     icon: Mapped[str | None] = mapped_column(String(255), nullable=True)
 

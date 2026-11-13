@@ -7,7 +7,7 @@ class ProductBase(BaseModel):
     price: float = Field(ge=0)
     rating: float | None = Field(default=None, ge=0, le=5)
     image_url: str | None = Field(default=None, max_length=500)
-    category_id: int
+    category_id: str
     stock: int = Field(default=0, ge=0)
 
 
@@ -21,7 +21,7 @@ class ProductUpdate(BaseModel):
     price: float | None = Field(default=None, ge=0)
     rating: float | None = Field(default=None, ge=0, le=5)
     image_url: str | None = Field(default=None, max_length=500)
-    category_id: int | None = None
+    category_id: str | None = None
     stock: int | None = Field(default=None, ge=0)
 
 

@@ -18,7 +18,8 @@ class Product(Base):
     price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
     rating: Mapped[float | None] = mapped_column(Numeric(2, 1), nullable=True)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    category_id: Mapped[int] = mapped_column(
+    category_id: Mapped[str] = mapped_column(
+        String(32),
         ForeignKey("categories.id", ondelete="CASCADE"),
         index=True,
         nullable=False,

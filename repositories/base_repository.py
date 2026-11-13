@@ -17,7 +17,7 @@ class BaseRepository(Generic[ModelT]):
     def list(self, skip: int = 0, limit: int = 100) -> list[ModelT]:
         return list(self.db.scalars(select(self.model).offset(skip).limit(limit)).all())
 
-    def get(self, entity_id: int) -> ModelT | None:
+    def get(self, entity_id: int | str) -> ModelT | None:
         return self.db.get(self.model, entity_id)
 
     def add(self, entity: ModelT) -> ModelT:

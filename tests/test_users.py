@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from database.base import Base
-from database.connection import get_db
+from database.connection import execute_seed_sql, get_db
 from main import app
 
 engine = create_engine(
@@ -34,6 +34,8 @@ app.dependency_overrides[get_db] = override_get_db
 @pytest.fixture(autouse=True)
 def reset_db():
     Base.metadata.create_all(bind=engine)
+    with engine.begin() as db:
+        execute_seed_sql(db)
     yield
     Base.metadata.drop_all(bind=engine)
 
@@ -45,7 +47,10 @@ def client():
 
 
 def test_category_product_relationship(client):
-    cat = client.post("/categories", json={"label": "Bolos", "icon": "cake"})
+    cat = client.post(
+        "/categories",
+        json={"id": "test-cakes", "label": "Bolos de teste", "icon": "cake"},
+    )
     assert cat.status_code == 201
     cat_id = cat.json()["id"]
 
@@ -67,9 +72,37 @@ def test_category_product_relationship(client):
 def test_product_requires_existing_category(client):
     resp = client.post(
         "/products",
-        json={"name": "X", "price": 1.0, "category_id": 999, "stock": 0},
+        json={"name": "X", "price": 1.0, "category_id": "missing-category", "stock": 0},
     )
     assert resp.status_code == 400
+
+
+def test_seeded_categories_and_products(client):
+    with engine.begin() as db:
+        execute_seed_sql(db)
+    categories = client.get("/categories")
+    assert categories.status_code == 200
+    assert categories.json() == [
+        {"id": "all", "label": "Tudo", "icon": "✳"},
+        {"id": "cakes", "label": "Bolos", "icon": "▰"},
+        {"id": "cupcakes", "label": "Cupcakes", "icon": "♧"},
+        {"id": "cookies", "label": "Cookies", "icon": "◉"},
+        {"id": "coffee", "label": "Cafés", "icon": "♨"},
+    ]
+
+    products = client.get("/products", params={"category_id": "all"})
+    assert products.status_code == 200
+    assert len(products.json()) == 6
+    assert {product["category_id"] for product in products.json()} == {
+        "cakes",
+        "cupcakes",
+        "cookies",
+        "coffee",
+    }
+    assert client.post(
+        "/categories",
+        json={"id": "all", "label": "Tudo", "icon": "✳"},
+    ).status_code == 400
 
 
 def test_user_crud_and_auth(client):

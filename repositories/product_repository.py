@@ -11,7 +11,7 @@ class ProductRepository(BaseRepository[Product]):
         self,
         skip: int = 0,
         limit: int = 100,
-        category_id: int | None = None,
+        category_id: str | None = None,
     ) -> list[Product]:
         stmt = select(Product)
         if category_id is not None:

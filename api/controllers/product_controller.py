@@ -19,8 +19,10 @@ class ProductController:
         self,
         skip: int = 0,
         limit: int = 100,
-        category_id: int | None = None,
+        category_id: str | None = None,
     ) -> list[Product]:
+        if category_id == "all":
+            category_id = None
         return self.service.list_products(skip=skip, limit=limit, category_id=category_id)
 
     def get_product(self, product_id: int) -> Product:
@@ -30,12 +32,16 @@ class ProductController:
         return product
 
     def create_product(self, data: ProductCreate) -> Product:
+        if data.category_id == "all":
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, "A opção Tudo não é uma categoria de produto")
         if self.category_service.get_category(data.category_id) is None:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, "Categoria não encontrada")
         return self.service.create_product(data)
 
     def update_product(self, product_id: int, data: ProductUpdate) -> Product:
         product = self.get_product(product_id)
+        if data.category_id == "all":
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, "A opção Tudo não é uma categoria de produto")
         if data.category_id is not None and self.category_service.get_category(data.category_id) is None:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, "Categoria não encontrada")
         return self.service.update_product(product, data)

@@ -17,12 +17,12 @@ def list_categories(skip: int = 0, limit: int = 100, controller: CategoryControl
 
 
 @router.get("/{category_id}", response_model=CategoryRead)
-def get_category(category_id: int, controller: CategoryController = Depends()):
+def get_category(category_id: str, controller: CategoryController = Depends()):
     return controller.get_category(category_id)
 
 
 @router.get("/{category_id}/products", response_model=CategoryWithProducts)
-def get_category_products(category_id: int, controller: CategoryController = Depends()):
+def get_category_products(category_id: str, controller: CategoryController = Depends()):
     return controller.get_category_with_products(category_id)
 
 
@@ -32,10 +32,10 @@ def create_category(data: CategoryCreate, controller: CategoryController = Depen
 
 
 @router.patch("/{category_id}", response_model=CategoryRead)
-def update_category(category_id: int, data: CategoryUpdate, controller: CategoryController = Depends()):
+def update_category(category_id: str, data: CategoryUpdate, controller: CategoryController = Depends()):
     return controller.update_category(category_id, data)
 
 
 @router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_category(category_id: int, controller: CategoryController = Depends()):
+def delete_category(category_id: str, controller: CategoryController = Depends()):
     controller.delete_category(category_id)

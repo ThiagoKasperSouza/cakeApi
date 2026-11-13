@@ -10,7 +10,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 def list_products(
     skip: int = 0,
     limit: int = 100,
-    category_id: int | None = None,
+    category_id: str | None = None,
     controller: ProductController = Depends(),
 ):
     return controller.list_products(skip=skip, limit=limit, category_id=category_id)
