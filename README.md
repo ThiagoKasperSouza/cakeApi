@@ -96,6 +96,8 @@ A API cria as tabelas e executa `insert_into_db.sql` automaticamente no startup 
 
 > Em volumes existentes, a API migra automaticamente os IDs numéricos de categoria para strings antes de executar o seed, preservando produtos e categorias. Categorias conhecidas são convertidas para `cakes`, `cupcakes`, `cookies` ou `coffee`; outras recebem IDs `legacy-<id>`.
 
+O CORS permite por padrão as origens locais `localhost` e `127.0.0.1` nas portas `3000` e `5173`. Se o frontend usar outra origem, configure `CORS_ORIGINS` no `.env` com origens separadas por vírgula (inclua protocolo e porta, sem barra final) e recrie a API.
+
 - API: <http://127.0.0.1:8000>
 - Swagger UI: <http://127.0.0.1:8000/docs>
 - Health check: <http://127.0.0.1:8000/health>
@@ -134,6 +136,7 @@ uvicorn main:app --reload
 | `POSTGRES_DB` | `cakeapi` | Nome do banco (compose) |
 | `POSTGRES_PORT` | `5433` | Porta exposta no host (compose) |
 | `API_PORT` | `8000` | Porta exposta pela API no host (compose) |
+| `CORS_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173` | Origens web permitidas, separadas por vírgula |
 | `DATABASE_URL` | `postgresql+psycopg://cakeapi:cakeapi@localhost:5433/cakeapi` | URL usada pela API fora do compose |
 | `SECRET_KEY` | — | Chave HMAC para assinar os JWTs (**troque em produção**) |
 | `ALGORITHM` | `HS256` | Algoritmo do JWT |
